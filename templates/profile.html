@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ user.username }}</h1>
+<p>Email: {{ user.email }}</p>
+<p>Favorites: 
+    <ul>
+        {% for favorite in user.favorites %}
+            <li>{{ favorite.spot.name }}</li>
+        {% endfor %}
+    </ul>
+</p>
+{% endblock %}

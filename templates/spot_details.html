@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ spot.name }}</h1>
+<p>Latitude: {{ spot.latitude }}</p>
+<p>Longitude: {{ spot.longitude }}</p>
+
+<h2>Weather</h2>
+{% if weather %}
+    <p>Temperature: {{ weather.temperature }}°C</p>
+    <p>Weather: {{ weather.weather_descriptions|join(', ') }}</p>
+    <p>Wind Speed: {{ weather.wind_speed }} km/h</p>
+{% else %}
+    <p>No weather data available.</p>
+{% endif %}
+{% endblock %}

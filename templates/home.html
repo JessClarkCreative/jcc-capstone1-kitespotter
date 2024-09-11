@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Welcome to KiteSpotter</h1>
+<ul>
+    {% for spot in spots %}
+        <li>
+            <a href="{{ url_for('spot_details', spot_id=spot.id) }}">{{ spot.name }}</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
