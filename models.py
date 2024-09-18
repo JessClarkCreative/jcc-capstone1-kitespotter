@@ -12,7 +12,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    favorites = db.relationship('Favourite', backref='user', lazy=True)
+    favorite = db.relationship('Favorite', backref='user', lazy=True)
 
 class Spot(db.Model):
     spot_id = db.Column(db.Integer, primary_key=True)

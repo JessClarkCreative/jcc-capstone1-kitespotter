@@ -10,6 +10,8 @@ app.config.from_object(Config)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 connect_db(app)
+with app.app_context():
+    db.create_all()
 
 def get_weather_data(latitude, longitude):
     api_key = Config.WEATHER_API_KEY
@@ -37,6 +39,7 @@ def load_user(user_id):
 @app.route('/')
 def home():
     spots = Spot.query.all()
+    
     return render_template('home.html', spots=spots)
 
 @app.route('/spot/<int:spot_id>')
