@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request
+import requests
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user 
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
@@ -38,9 +39,11 @@ def load_user(user_id):
 
 @app.route('/')
 def home():
-    spots = Spot.query.all()
-    
-    return render_template('home.html', spots=spots)
+    # spots = Spot.query.all()
+    # data = get_weather_data(40.7128, 74.0060)
+    # print(data)
+    return render_template('home.html') 
+                        #    spots=spots)
 
 @app.route('/spot/<int:spot_id>')
 def spot_details(spot_id):
@@ -50,6 +53,8 @@ def spot_details(spot_id):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'GET':
+        return render_template('login.html')
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -57,8 +62,9 @@ def login():
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
             return redirect(url_for('home'))
-        return render_template('login.html')
+        return render_template('')
     
+   
 @app.route('/logout')
 @login_required
 def logout():
