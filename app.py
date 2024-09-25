@@ -62,7 +62,7 @@ def login():
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
             return redirect(url_for('home'))
-        return render_template('')
+        return render_template('profile.html')
     
    
 @app.route('/logout')
@@ -77,12 +77,22 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        hashed_password = generate_password_hash(password, method='sha256')
+
+        # checking if username or email already exists
+        existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
+        if existing_user:
+            return render_template('register.html', error="Username or email already exists.")
+
+        hashed_password = generate_password_hash(password)
         new_user = User(username=username, email=email, password_hash=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        login_user(new_user)
-        return redirect(url_for('home'))
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user)
+            return redirect(url_for('home'))
+        except Exception as e:
+            db.session.rollback() # roll back any changes made
+            # return render_template('register.html', error=f"An error occured: {e}")
     return render_template('register.html')
 
 @app.route('/profile')
