@@ -13,6 +13,8 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(512), nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     favorite = db.relationship('Favorite', backref='user', lazy=True)
+    def get_id(self):
+        return self.user_id
 
 class Spot(db.Model):
     spot_id = db.Column(db.Integer, primary_key=True)
@@ -24,7 +26,7 @@ class Spot(db.Model):
     wind_speed = db.Column(db.String(50), nullable=True)
     water_direction = db.Column(db.String(50), nullable=True)
     accessibility = db.Column(db.String(100), nullable=True)
-    difficulty_level = db.Column(db.Enum('beginner', 'intermediate', 'advanced', name='difficulty_level'), nullable=False)
+    difficulty_level = db.Column(db.Enum('beginner', 'intermediate', 'advanced', name='difficulty_level'), nullable=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     reviews = db.relationship('Review', backref='spot', lazy=True)
 

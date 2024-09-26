@@ -2,11 +2,24 @@
 
 {% block content %}
 <h1>Welcome to KiteSpotter</h1>
-<ul>
+
+<input id="search-input" type="text" placeholder="Search for places" />
+<button id="search-button">Search</button>
+
+<input id="marker-name" type="text" placeholder="Enter marker name" />
+<button id="save-button">Save Marker</button>
+<div id="map" style="height: 450px; width: 100%;"></div>
+
+<h2>Saved Markers</h2>
+<ul id="saved-markers">
     {% for spot in spots %}
         <li>
-            <a href="{{ url_for('spot_details', spot_id=spot.id) }}">{{ spot.name }}</a>
+            Latitude: {{ spot.latitude }}, Longitude: {{ spot.longitude }}
         </li>
     {% endfor %}
 </ul>
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='map.js') }}"></script>
 {% endblock %}
