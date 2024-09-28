@@ -12,7 +12,6 @@ function initMap() {
     service = new google.maps.places.PlacesService(map);
 }
 
-// Move this outside of initMap
 document.getElementById('search-button').addEventListener('click', function() {
     const query = document.getElementById('search-input').value;
     const request = {

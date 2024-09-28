@@ -102,6 +102,7 @@ def register():
 def save_marker():
     data = request.get_json()
     print("Received data:", data)
+    
     latitude = data.get('latitude')
     longitude = data.get('longitude')
     name = data.get('name')
@@ -111,10 +112,16 @@ def save_marker():
 
     # Here you would save the latitude and longitude to your database
     new_spot = Spot(name=name, latitude=latitude, longitude=longitude)
-    db.session.add(new_spot)
-    db.session.commit()
+    
+    try:
+        db.session.add(new_spot)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print("error saving marker:", e)
+        return jsonify({'error': 'Failed to save marker'}), 500
 
-    return jsonify({'message': 'Marker saved successfully!', 'latitude': latitude, 'longitude': longitude}), 201
+    return jsonify({'message': 'Marker saved successfully!', 'spot_id': new_spot.spot_id, 'latitude': latitude, 'longitude': longitude}), 201
 
 @app.route('/profile')
 @login_required
