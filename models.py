@@ -26,7 +26,7 @@ class Spot(db.Model):
     wind_speed = db.Column(db.String(50), nullable=True)
     water_direction = db.Column(db.String(50), nullable=True)
     accessibility = db.Column(db.String(100), nullable=True)
-    difficulty_level = db.Column(db.Enum('beginner', 'intermediate', 'advanced', name='difficulty_level'), nullable=True)
+    difficulty_level = db.Column(db.Enum('beginner', 'intermediate', 'advanced', 'none', name='difficulty_level'), nullable=True, default='none')
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     reviews = db.relationship('Review', backref='spot', lazy=True)
 

@@ -1,0 +1,59 @@
+body {
+    background-color: #ffffff; /* Light gray background */
+}
+
+.text-center {
+    margin: 20px 0; /* Add some space around centered text */
+}
+
+
+.main-container {
+    padding: 20px;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    background-color: white; /* White background for main content */
+}
+
+.navbar-light-gray {
+    background-color: #d1d1d1; /* Light gray color */
+}
+
+.list-group-item {
+    /* Add any default styling you want for all list items */
+    border: 1px solid #e0e0e0; /* Optional border for clarity */
+    margin-bottom: 5px; /* Space between items */
+}
+
+.list-group-item:hover {
+    background-color: #e9ecef; /* Light gray on hover */
+    cursor: pointer; /* Pointer cursor for better UX */
+}
+
+.custom-nav-link {
+    color: #4d4d4d; /* Override color */
+}
+
+.custom-nav-link:hover {
+    color: #8f8f8f; /* Color on hover */
+}
+
+.custom-nav-link:focus {
+    color: #101010; /* Color on focus */
+}
+
+.navbar-brand-custom {
+    color: #101010;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Default placeholder color */
+::placeholder {
+    color: #999; /* Light gray color */
+}
+
+/* Change placeholder color on hover */
+input:hover::placeholder {
+    color: #bbb; /* A lighter gray when hovered */
+}
+
