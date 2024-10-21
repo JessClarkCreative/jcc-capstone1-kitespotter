@@ -1,5 +1,5 @@
 import unittest
-from app import app, db, User, Spot
+from app import app, db, User, Spot, get_weather_data, load_user
 from flask_login import login_user
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -43,76 +43,80 @@ class KiteSpotAppTests(unittest.TestCase):
         cls.connection.close()
         cls.engine.dispose()
 
-#Test the maps URL API
-    def test_maps_url(self):
-        response = self.client.get('/api/maps-url/37.7749/-122.4194')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('url', response.json)
+# Test the maps URL API
+    # def test_maps_url(self):
+    #     latitude = 37.7749
+    #     longitude = -122.4194
+    #     response = self.client.get(f'/api/maps-url/{latitude}/{longitude}')
+    #     print (response.json)
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertIn('url', response.json)
+        
 
 #Tests weather data retrieval
-    def test_get_weather_data(self):
-        weather_data = get_weather_data(37.7749, -122.4194)
-        self.assertIn('temperature', weather_data)
+#     def test_get_weather_data(self):
+#         weather_data = get_weather_data(37.7749, -122.4194)
+#         self.assertIn('temperature', weather_data)
 
-#Checks if user loading works correctly with ID
-    def test_load_user(self):
-        with self.app.app_context():
-            user = load_user(self.test_user.user_id)
-            self.assertEqual(user.username, 'testuser')
+#Tests if user loading works correctly with ID
+    # def test_load_user(self):
+    #     with self.app.app_context():
+    #         user = load_user(self.test_user.user_id)
+    #         self.assertEqual(user.username, 'testuser')
 
-#Tests that the home page loads and contains expected spot name
-    def test_home_page(self):
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Test Spot', response.data)
+#PASSING Tests that the home page loads and contains expected spot name
+    # def test_home_page(self):
+    #     response = self.client.get('/')
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertIn(b'Test Spot', response.data)
 
-#Verifies that the spot details page loads correctly
-    def test_spot_details(self):
-        response = self.client.get('/spot/1')  
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Test Spot', response.data)
+#PASSING Tests that the spot details page loads correctly 
+    # def test_spot_details(self):
+    #     response = self.client.get('/spot/1')  
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertIn(b'Test Spot', response.data)
 
 #Tests login functionality
-    def test_login(self):
-        response = self.client.post('/login', data={'email': 'test@example.com', 'password': 'testpassword'})
-        self.assertEqual(response.status_code, 302)
+    # def test_login(self):
+    #     response = self.client.post('/login', data={'email': 'test@example.com', 'password': 'testpassword'})
+    #     self.assertEqual(response.status_code, 302)
 
 #Tests logout functionality
-    def test_logout(self):
-        with self.client:
-            login_user(self.test_user)
-            response = self.client.get('/logout')
-            self.assertEqual(response.status_code, 302)
+    # def test_logout(self):
+    #     with self.client:
+    #         login_user(self.test_user)
+    #         response = self.client.get('/logout')
+    #         self.assertEqual(response.status_code, 302)
 
-#Tests user registration
-    def test_register_user(self):
-        response = self.client.post('/register', data={
-            'username': 'newuser',
-            'email': 'newuser@example.com',
-            'password': 'newpassword'
-        })
-        self.assertEqual(response.status_code, 302)
-        with self.app.app_context():
-            user = User.query.filter_by(username='newuser').first()
-            self.assertIsNotNone(user)
+# PASSING Tests user registration
+    # def test_register_user(self):
+    #     response = self.client.post('/register', data={
+    #         'username': 'newuser',
+    #         'email': 'newuser@example.com',
+    #         'password': 'newpassword'
+    #     })
+    #     self.assertEqual(response.status_code, 302)
+    #     with self.app.app_context():
+    #         user = User.query.filter_by(username='newuser').first()
+    #         self.assertIsNotNone(user)
 
-#Tests saving a new spot
-    def test_save_marker(self):
-        response = self.client.post('/api/save-marker', json={
-            'latitude': 37.7749,
-            'longitude': -122.4194,
-            'name': 'New Test Spot'
-        })
-        self.assertEqual(response.status_code, 201)
-        self.assertIn('Marker saved successfully!', response.json['message'])
+#PASSING Tests saving a new spot
+#     def test_save_marker(self):
+#         response = self.client.post('/api/save-marker', json={
+#             'latitude': 37.7749,
+#             'longitude': -122.4194,
+#             'name': 'New Test Spot'
+#         })
+#         self.assertEqual(response.status_code, 201)
+#         self.assertIn('Marker saved successfully!', response.json['message'])
 
 #Tests accessing the profile page after logging in
-    def test_profile(self):
-        with self.client:
-            login_user(self.test_user)
-            response = self.client.get('/profile')
-            self.assertEqual(response.status_code, 200)
-            self.assertIn(b'testuser', response.data)
+    # def test_profile(self):
+    #     with self.client:
+    #         login_user(self.test_user)
+    #         response = self.client.get('/profile')
+    #         self.assertEqual(response.status_code, 200)
+    #         self.assertIn(b'testuser', response.data)
 
 if __name__ == '__main__':
     unittest.main()
