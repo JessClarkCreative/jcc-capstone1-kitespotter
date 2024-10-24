@@ -1,122 +1,108 @@
 import unittest
-from app import app, db, User, Spot, get_weather_data, load_user
+from app import app, db, User, Spot, load_user, get_weather_data
 from flask_login import login_user
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from config import Config
+from werkzeug.security import generate_password_hash
 import os
-
-#In terminal use python -m unittest tests.py to run tests
 
 class KiteSpotAppTests(unittest.TestCase):
 
-#Set up test environment
     @classmethod
     def setUpClass(cls):
         cls.app = app
         cls.app.config['TESTING'] = True
-        
-        # Use a test database URI for the tests
         cls.app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('TEST_DATABASE_URL', 'postgresql://user:password@localhost/test_db')
         
         cls.client = cls.app.test_client()
         
-        # Create a new database session
-        cls.engine = create_engine(cls.app.config['SQLALCHEMY_DATABASE_URI'])
-        cls.connection = cls.engine.connect()
-        cls.session = sessionmaker(bind=cls.engine)() 
-        
-        with cls.app.app_context():  
-            db.create_all() 
-            cls.test_user = User(username='testuser', email='test@example.com', password_hash='testpassword') 
-            cls.test_spot = Spot(name='Test Spot', latitude=37.7749, longitude=-122.4194) 
+        with cls.app.app_context():
+            db.create_all()
+            cls.test_user = User(username='testuser', email='test@example.com', password_hash=generate_password_hash('testpassword'))
+            cls.test_spot = Spot(name='Test Spot', latitude=37.7749, longitude=-122.4194)
             db.session.add(cls.test_user)
-            db.session.add(cls.test_spot) 
-            db.session.commit() 
+            db.session.add(cls.test_spot)
+            db.session.commit()
 
-#Clean up after tests
     @classmethod
     def tearDownClass(cls):
         with cls.app.app_context():
             db.session.remove()
             db.drop_all()
-        cls.connection.close()
-        cls.engine.dispose()
 
-# Test the maps URL API
-    # def test_maps_url(self):
-    #     latitude = 37.7749
-    #     longitude = -122.4194
-    #     response = self.client.get(f'/api/maps-url/{latitude}/{longitude}')
-    #     print (response.json)
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertIn('url', response.json)
-        
+    def setUp(self):
+        # Reset the session or perform any setup before each test if needed
+        pass
 
-#Tests weather data retrieval
-#     def test_get_weather_data(self):
-#         weather_data = get_weather_data(37.7749, -122.4194)
-#         self.assertIn('temperature', weather_data)
+    def tearDown(self):
+        # Clean up after each test if necessary
+        pass
 
-#Tests if user loading works correctly with ID
-    # def test_load_user(self):
-    #     with self.app.app_context():
-    #         user = load_user(self.test_user.user_id)
-    #         self.assertEqual(user.username, 'testuser')
-
-#PASSING Tests that the home page loads and contains expected spot name
-    # def test_home_page(self):
-    #     response = self.client.get('/')
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertIn(b'Test Spot', response.data)
-
-#PASSING Tests that the spot details page loads correctly 
-    # def test_spot_details(self):
-    #     response = self.client.get('/spot/1')  
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertIn(b'Test Spot', response.data)
-
-#Tests login functionality
-    # def test_login(self):
-    #     response = self.client.post('/login', data={'email': 'test@example.com', 'password': 'testpassword'})
-    #     self.assertEqual(response.status_code, 302)
-
-#Tests logout functionality
-    # def test_logout(self):
-    #     with self.client:
-    #         login_user(self.test_user)
-    #         response = self.client.get('/logout')
-    #         self.assertEqual(response.status_code, 302)
-
-# PASSING Tests user registration
     # def test_register_user(self):
+    #     """PASSING Test user registration."""
     #     response = self.client.post('/register', data={
     #         'username': 'newuser',
     #         'email': 'newuser@example.com',
     #         'password': 'newpassword'
     #     })
-    #     self.assertEqual(response.status_code, 302)
+    #     self.assertEqual(response.status_code, 302)  # Check for redirect on successful registration
     #     with self.app.app_context():
     #         user = User.query.filter_by(username='newuser').first()
     #         self.assertIsNotNone(user)
 
-#PASSING Tests saving a new spot
-#     def test_save_marker(self):
-#         response = self.client.post('/api/save-marker', json={
-#             'latitude': 37.7749,
-#             'longitude': -122.4194,
-#             'name': 'New Test Spot'
-#         })
-#         self.assertEqual(response.status_code, 201)
-#         self.assertIn('Marker saved successfully!', response.json['message'])
+    # def test_login(self):
+    #     """PASSING Test the login functionality."""
+    #     response = self.client.post('/login', data={'email': 'test@example.com', 'password': 'testpassword'})
+    #     self.assertEqual(response.status_code, 302)  # Check for redirect on successful login
 
-#Tests accessing the profile page after logging in
-    # def test_profile(self):
-    #     with self.client:
+    # def test_load_user(self):
+    #     """Test loading a user by ID."""
+    #     with self.app.app_context():
+    #         user = User.query.get(self.test_user.user_id)
+    #         self.assertIsNotNone(user)
+    #         self.assertEqual(user.email, 'test@example.com')
+
+    # def test_logout(self):
+    #     """Tests logout functionality"""
+    #     with self.app.app_context():
     #         login_user(self.test_user)
-    #         response = self.client.get('/profile')
-    #         self.assertEqual(response.status_code, 200)
-    #         self.assertIn(b'testuser', response.data)
+    #         response = self.client.get('/logout')
+    #         self.assertEqual(response.status_code, 302)
+
+    # def test_home_page(self):
+    #     """PASSING Test that the home page loads correctly."""
+    #     response = self.client.get('/')
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertIn(b'Test Spot', response.data)  # Check for expected content
+
+    # def test_spot_details(self):
+    #     """PASSING Test that the spot details page loads correctly."""
+    #     response = self.client.get('/spot/1')
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertIn(b'Test Spot', response.data)
+
+    # def test_maps_url(self):
+    #     """PASSING Test the maps URL API"""
+    #     latitude = 37.7749
+    #     longitude = 122.4194
+    #     response = self.client.get(f'/api/maps-url/{latitude}/{longitude}')
+    #     print (response.get_data(as_text=True))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertIn('url', response.json)
+            
+    # def test_get_weather_data(self):
+    #     """PASSING Tests weather data retrieval"""
+    #     weather_data = get_weather_data(37.7749, -122.4194)
+    #     self.assertIn('temperature', weather_data)
+
+    # def test_save_marker(self):
+    #     """PASSING Tests saving a new spot"""
+    #     response = self.client.post('/api/save-marker', json={
+    #         'latitude': 37.7749,
+    #         'longitude': -122.4194,
+    #         'name': 'New Test Spot'
+    #     })
+    #     self.assertEqual(response.status_code, 201)
+    #     self.assertIn('Marker saved successfully!', response.json['message'])
+            
 
 if __name__ == '__main__':
     unittest.main()
