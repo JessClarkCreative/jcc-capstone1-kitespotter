@@ -36,22 +36,22 @@ class KiteSpotAppTests(unittest.TestCase):
         # Clean up after each test if necessary
         pass
 
-    # def test_register_user(self):
-    #     """PASSING Test user registration."""
-    #     response = self.client.post('/register', data={
-    #         'username': 'newuser',
-    #         'email': 'newuser@example.com',
-    #         'password': 'newpassword'
-    #     })
-    #     self.assertEqual(response.status_code, 302)  # Check for redirect on successful registration
-    #     with self.app.app_context():
-    #         user = User.query.filter_by(username='newuser').first()
-    #         self.assertIsNotNone(user)
+    def test_register_user(self):
+        """PASSING Test user registration."""
+        response = self.client.post('/register', data={
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password': 'newpassword'
+        })
+        self.assertEqual(response.status_code, 302)  # Check for redirect on successful registration
+        with self.app.app_context():
+            user = User.query.filter_by(username='newuser').first()
+            self.assertIsNotNone(user)
 
-    # def test_login(self):
-    #     """PASSING Test the login functionality."""
-    #     response = self.client.post('/login', data={'email': 'test@example.com', 'password': 'testpassword'})
-    #     self.assertEqual(response.status_code, 302)  # Check for redirect on successful login
+    def test_login(self):
+        """PASSING Test the login functionality."""
+        response = self.client.post('/login', data={'email': 'test@example.com', 'password': 'testpassword'})
+        self.assertEqual(response.status_code, 302)  # Check for redirect on successful login
 
     # def test_load_user(self):
     #     """Test loading a user by ID."""
@@ -67,41 +67,41 @@ class KiteSpotAppTests(unittest.TestCase):
     #         response = self.client.get('/logout')
     #         self.assertEqual(response.status_code, 302)
 
-    # def test_home_page(self):
-    #     """PASSING Test that the home page loads correctly."""
-    #     response = self.client.get('/')
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertIn(b'Test Spot', response.data)  # Check for expected content
+    def test_home_page(self):
+        """PASSING Test that the home page loads correctly."""
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Test Spot', response.data)  # Check for expected content
 
-    # def test_spot_details(self):
-    #     """PASSING Test that the spot details page loads correctly."""
-    #     response = self.client.get('/spot/1')
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertIn(b'Test Spot', response.data)
+    def test_spot_details(self):
+        """PASSING Test that the spot details page loads correctly."""
+        response = self.client.get('/spot/1')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Test Spot', response.data)
 
-    # def test_maps_url(self):
-    #     """PASSING Test the maps URL API"""
-    #     latitude = 37.7749
-    #     longitude = 122.4194
-    #     response = self.client.get(f'/api/maps-url/{latitude}/{longitude}')
-    #     print (response.get_data(as_text=True))
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertIn('url', response.json)
+    def test_maps_url(self):
+        """PASSING Test the maps URL API"""
+        latitude = 37.7749
+        longitude = 122.4194
+        response = self.client.get(f'/api/maps-url/{latitude}/{longitude}')
+        print (response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('url', response.json)
             
-    # def test_get_weather_data(self):
-    #     """PASSING Tests weather data retrieval"""
-    #     weather_data = get_weather_data(37.7749, -122.4194)
-    #     self.assertIn('temperature', weather_data)
+    def test_get_weather_data(self):
+        """PASSING Tests weather data retrieval"""
+        weather_data = get_weather_data(37.7749, -122.4194)
+        self.assertIn('temperature', weather_data)
 
-    # def test_save_marker(self):
-    #     """PASSING Tests saving a new spot"""
-    #     response = self.client.post('/api/save-marker', json={
-    #         'latitude': 37.7749,
-    #         'longitude': -122.4194,
-    #         'name': 'New Test Spot'
-    #     })
-    #     self.assertEqual(response.status_code, 201)
-    #     self.assertIn('Marker saved successfully!', response.json['message'])
+    def test_save_marker(self):
+        """PASSING Tests saving a new spot"""
+        response = self.client.post('/api/save-marker', json={
+            'latitude': 37.7749,
+            'longitude': -122.4194,
+            'name': 'New Test Spot'
+        })
+        self.assertEqual(response.status_code, 201)
+        self.assertIn('Marker saved successfully!', response.json['message'])
             
 
 if __name__ == '__main__':
