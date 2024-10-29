@@ -19,5 +19,6 @@ Kitespotter is a web application that allows users to search for kite surfing sp
 1. Clone the repository.
 2. Set up the virtual environment.
 3. Install the dependencies and the APIs (Weather Stack, Google Maps).
-4. Start the application with:
-	```flask run```
+4. Create a .env file with secret key, database url, api keys, and a test database url.
+5. Start the application with:
+	```flask run````
